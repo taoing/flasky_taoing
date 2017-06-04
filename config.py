@@ -67,7 +67,7 @@ class HerokuConfig(ProductionConfig):
 
 		from werkzeug.contrib.fixers import ProxyFix
 		app.wsgi_app = ProxyFix(app.wsgi_app)
-		# 输出到stderr
+
 		import logging
 		from logging import StreamHandler
 		file_handler = StreamHandler()
