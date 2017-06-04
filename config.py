@@ -2,8 +2,14 @@ import os
 
 class Config:
 	SECRET_KEY = os.environ.get('SECRET_KEY') or 'passwordpwd'
+	SSL_DISABLE = True
 	SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 	SQLALCHEMY_TRACK_MODIFICATIONS = True
+	MAIL_SERVER = 'smtp.qq.com'
+	MAIL_PORT = 465
+	MAIL_USE_SSL = True
+	MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 	FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
 	FLASKY_MAIL_SENDER = 'Flasky Admin <529982750@qq.com>'
 	FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN') or '529982750@qq.com'
@@ -20,11 +26,6 @@ class Config:
 
 class DevelopmentConfig(Config):
 	DEBUG = True
-	MAIL_SERVER = 'smtp.qq.com'
-	MAIL_PORT = 465
-	MAIL_USE_SSL = True
-	MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 	SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:password@localhost:3306/data_dev'
 
 class TestingConfig(Config):
@@ -58,9 +59,14 @@ class ProductionConfig(Config):
 		app.logger.addHandler(mail_handler)
 
 class HerokuConfig(ProductionConfig):
+	SSL_DISABLE = bool(os.environ.get('SSL_DISABLE'))
+
 	@classmethod
 	def init_app(cls, app):
 		ProductionConfig.init_app(app)
+
+		from werkzeug.contrib.fixers import ProxyFix
+		app.wsgi_app = ProxyFix(app.wsgi_app)
 		# 输出到stderr
 		import logging
 		from logging import StreamHandler
