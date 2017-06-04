@@ -33,7 +33,7 @@ class TestingConfig(Config):
 	SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:password@localhost:3306/data_test'
 
 class ProductionConfig(Config):
-	SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:password@localhost:3306/data_prod'
+	SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://root:password@localhost:3306/data_prod'
 
 	@classmethod
 	def init_app(cls,app):
