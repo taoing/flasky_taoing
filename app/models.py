@@ -118,7 +118,7 @@ class User(UserMixin,db.Model):
 		return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(url=url,hash=hash,size=size,default=default,rating=rating)
 
 	def can(self,permissions):
-		return self.role is not None and (self.role.permissions & permissions)==permissions #为什么用& ？
+		return self.role is not None and (self.role.permissions & permissions)==permissions
 
 	def is_administrator(self):
 		return self.can(Permission.ADMINISTER)
