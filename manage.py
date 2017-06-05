@@ -55,8 +55,7 @@ def deploy():
 	from app.models import Role, User
 
 	# migrate database to latest revision
-	# upgrade()
-	db.create_all()
+	upgrade()
 
 	# create user roles
 	Role.insert_roles()
